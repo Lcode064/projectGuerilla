@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center; /* Center the content horizontally */
+            align-items: center; /* Center the content vertically */
+            height: 100vh; /* Make sure the body covers the entire viewport height */
+            margin: 0; /* Remove margin to prevent extra space */
+        }
+        
+        .container {
+            border-radius: 6px;
+            border: 1px solid gray;
+            padding: 10px;
+            margin: 10px;
+            background-color: #333;
+            text-align: center; /* Center the content inside the container */
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                width: 50%;
+                margin: 0 auto; /* Center the container horizontally on larger screens */
+            }
+        }
+
+        /* Style the "Thank You" button */
+        .thank-you-button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px; /* Add some space between the button and the pickup line */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pickup Lines 101</h1>
+        <h2 id="current-date"></h2>
+        <p id="pickup-line"></p>
+        <button class="thank-you-button" onclick="refreshPage()">Thank You</button>
+    </div>
+    <script>
+        // Get the current date and set it to the h2 element with id "current-date"
+        const currentDate = new Date();
+        document.getElementById("current-date").innerText = currentDate.toDateString();
+
+        // Make a GET request to the server-side endpoint
+        fetch('/get-pickup-line')
+        .then(response => response.json())
+        .then(data => {
+            const choices = data.choices;
+            if (choices && choices.length > 0) {
+                const pickupLine = choices[0].text.trim();
+                document.getElementById("pickup-line").innerText = pickupLine;
+            } else {
+                console.error('Error: No pickup line found in response:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching pickup line:', error);
+        });
+
+        // Function to refresh the page
+        function refreshPage() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
